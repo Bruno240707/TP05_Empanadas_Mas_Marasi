@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import Formulario from './Componentes/Formulario/Index.jsx'
+import Listado from './Componentes/Listado/Index.jsx'
 import './App.css'
 
 function App() {
   const [pedidos, setPedidos] = useState([])
   const [pedidosPorEmpanada, setPedidosPorEmpanada] = useState([{
-    nombre: 'Carne suave',
+    nombre: 'Carne Suave',
     cantidad: 0
   },{
-    nombre: 'Carne picante',
+    nombre: 'Carne Picante',
     cantidad: 0
   },{
     nombre: 'Pollo',
@@ -23,7 +24,9 @@ function App() {
     <>
       <div>
 
-        <Formulario setPedidos={setPedidos} setPedidosPorGusto={setPedidosPorEmpanada} pedidos={pedidos} pedidosPorEmpanada={pedidosPorEmpanada}/>
+        <Formulario setPedidos={setPedidos} setPedidosPorEmpanada={setPedidosPorEmpanada} pedidos={pedidos} pedidosPorEmpanada={pedidosPorEmpanada}/>
+
+        <Listado pedidos={pedidos} pedidosPorEmpanada={pedidosPorEmpanada}/>
 
       </div>
     </>

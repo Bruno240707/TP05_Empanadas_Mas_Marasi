@@ -5,10 +5,10 @@ const Formulario = ({setPedidosPorEmpanada, setPedidos, pedidos, pedidosPorEmpan
 
     const [nombre, setNombre] = useState("");
     const [sector, setSector] = useState("");
-    const [empanadas, setEmpanadas] = useState({gusto: "", cantidad: 1})
+    const [empanadas, setEmpanadas] = useState([{gusto: "", cantidad: 1}])
 
     const sectores = ['Sistemas', 'Finanzas', 'Ventas', 'Recursos Humanos', 'Soporte', 'Depósito']
-    const gustos = ['Carne suave', 'Carne Picante', 'Pollo', 'Jamon y Queso']
+    const gustos = ['Carne Suave', 'Carne Picante', 'Pollo', 'Jamon y Queso']
 
     const agregarOtraEmpanada = (e) => { 
         e.preventDefault()
@@ -30,16 +30,16 @@ const Formulario = ({setPedidosPorEmpanada, setPedidos, pedidos, pedidosPorEmpan
         e.preventDefault()
 
         const nuevoPedido = {
-            nombre,
-            sectorTrabajo: sector,
-            empanadas
+            nombre: nombre,
+            sector: sector,
+            empanadas: empanadas
         };
         
         setPedidos([...pedidos, nuevoPedido])
 
         const nuevosTotales = pedidosPorEmpanada.map(p => {
-            const totalExtra = empanadas.reduce((acum, emp) => {
-                return emp.gusto === p.nombre ? acum + emp.cantidad : acum;
+            const totalExtra = empanadas.reduce((acumular, empanada) => {
+                return empanada.gusto === p.nombre ? acumular + empanada.cantidad : acumular;
             }, 0);
             return {
                 nombre: p.nombre,
@@ -61,22 +61,20 @@ const Formulario = ({setPedidosPorEmpanada, setPedidos, pedidos, pedidosPorEmpan
             <h2>PEDIDO</h2>
             <form onSubmit={enviarPedido}>
                 <label>Ingresar Nombre</label>
-                <input type="text" name="nombre" placeholder="Ingrese su nombre" onChange={(e) => setSector(e.target.value)}></input>
+                <input type="text" name="nombre" placeholder="Ingrese su nombre" onChange={(e) => setNombre(e.target.value)}></input>
 
                 <label>Ingrese su sector de trabajo</label>
-                <select name="sector" onChange={(e) => setNombre(e.target.value)}>
-                {sectores.map((sector, index) => {
-                    return (
-                        <option key={index} value={sector}>
+                <select name="sector" onChange={(e) => setSector(e.target.value)}>
+                {sectores.map((sector) => 
+                    (
+                        <option>
                             {sector}
                         </option>
-                        );
-                    })}
+                    ))}
                 </select>
 
-                {empanadas.map((emp, i) => (
+                {empanadas.map((emp) => (
                     <Empanadas
-                        key={i}
                         gustos={gustos}
                         gusto={emp.gusto}
                         cantidad={emp.cantidad}
