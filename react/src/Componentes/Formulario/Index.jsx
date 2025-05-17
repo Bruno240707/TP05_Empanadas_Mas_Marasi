@@ -1,96 +1,85 @@
 import { useState } from "react"
-import Empanadas from "../Empanadas/Index"
+import Empanadas from "../Empanada/Index"
+import "./Formulario.css"
 
-const Formulario = ({setPedidosPorEmpanada, setPedidos, pedidos, pedidosPorEmpanada}) => {
+const Formulario = ({pedidosPorGusto, setPedidos, setPedidosPorGusto, pedidos}) => {
 
-    const [nombre, setNombre] = useState("");
-    const [sector, setSector] = useState("");
-    const [empanadas, setEmpanadas] = useState([{gusto: "", cantidad: 1}])
+    const Sectores = ['Sistemas', 'Finanzas', 'Ventas', 'Recursos Humanos', 'Soporte', 'Depósito']
+    const [empanadas, setEmpanadas] = useState([{gusto: "", cantidad: 0}])
+    const gustos = ["Jamon y Queso", "Carne Picante"]
 
-    const sectores = ['Sistemas', 'Finanzas', 'Ventas', 'Recursos Humanos', 'Soporte', 'Depósito']
-    const gustos = ['Carne Suave', 'Carne Picante', 'Pollo', 'Jamon y Queso']
-
-    const agregarOtraEmpanada = (e) => { 
+    const agregarOtraEmpanada = (e) => {
         e.preventDefault()
-        setEmpanadas([...empanadas, {gusto: "", cantidad: 1}])
+        setEmpanadas([...empanadas, {gusto: "", cantidad: 0}])
     }
 
-    const actualizarGusto = (empanadaRef, value) => {
+    const actualizarGustoEmpanada = (empanadaRef, value) =>{
         empanadaRef.gusto = value;
-        setEmpanadas([...empanadas]);
-    };
+        setEmpanadas([...empanadas])
+    }
+    const actualizarCantidadEmpanada = (empanadaRef, value) =>{
+        empanadaRef.cantidad = parseInt(value)
+        setEmpanadas([...empanadas])
+    }
 
-    const actualizarCantidad = (empanadaRef, value) => {
-        empanadaRef.cantidad = parseInt(value);
-        setEmpanadas([...empanadas]);
-    };
-
-    const enviarPedido = (e) => {
-
+    const onSubmit = (e) => {
         e.preventDefault()
 
         const nuevoPedido = {
-            nombre: nombre,
-            sector: sector,
+            nombre: e.target.nombre.value,
+            sector: e.target.sector.value,
             empanadas: empanadas
-        };
-        
-        setPedidos([...pedidos, nuevoPedido])
+        }
 
-        const nuevosTotales = pedidosPorEmpanada.map(p => {
-            const totalExtra = empanadas.reduce((acumular, empanada) => {
-                return empanada.gusto === p.nombre ? acumular + empanada.cantidad : acumular;
-            }, 0);
+        const nuevaLista = pedidosPorGusto.map(empPedidoPorGusto => {
+            const empanadasDelGusto = empanadas.filter(emp => emp.gusto === empPedidoPorGusto.gusto);
+            const totalCantidad = empanadasDelGusto.reduce((acumulador, emp) => acumulador + emp.cantidad, 0);
+
             return {
-                nombre: p.nombre,
-                cantidad: p.cantidad + totalExtra
-            };
-        });
-        setPedidosPorEmpanada(nuevosTotales);
-
-
-        setNombre("");
-        setSector("");
-        setEmpanadas([{ gusto: "", cantidad: 1}]);
+                ...empPedidoPorGusto,
+                cantidad: empPedidoPorGusto.cantidad + totalCantidad
+            }
+        })
+        
+        setPedidosPorGusto(nuevaLista)
+        setPedidos([...pedidos, nuevoPedido])
+        setEmpanadas([{gusto: "", cantidad: 0}])
+        setGustos(["Jamon y Queso", "Carne Picante"])
     }
 
-
-
     return (
-        <>  
-            <h2>PEDIDO</h2>
-            <form onSubmit={enviarPedido}>
-                <label>Ingresar Nombre</label>
-                <input type="text" name="nombre" placeholder="Ingrese su nombre" onChange={(e) => setNombre(e.target.value)}></input>
+        <>
+            <form onSubmit={onSubmit}>
+                <div>
+                    <label>Nombre:</label>
+                    <input type="text" name="nombre" placeholder="Ingrese su nombre"/>
+                </div>
+                <div>
+                    <label>Sector:</label>
+                    <select name="sector">
+                        {Sectores.map(sec => (
+                            <option value={sec}>{sec}</option>
+                        ))}
+                    </select>
+                </div>
 
-                <label>Ingrese su sector de trabajo</label>
-                <select name="sector" onChange={(e) => setSector(e.target.value)}>
-                {sectores.map((sector) => 
-                    (
-                        <option>
-                            {sector}
-                        </option>
+                <div>
+                    {empanadas.map((emp) => (
+                        <>
+                            <Empanadas
+                            gustos={gustos}
+                            gusto={emp.gusto}
+                            cantidad={emp.cantidad}
+                            onGustoChange={(e) => actualizarGustoEmpanada(emp, e.target.value)}
+                            onCantidadChange={(e) => actualizarCantidadEmpanada(emp, e.target.value)}
+                            />
+                        </>
                     ))}
-                </select>
-
-                {empanadas.map((emp) => (
-                    <Empanadas
-                        gustos={gustos}
-                        gusto={emp.gusto}
-                        cantidad={emp.cantidad}
-                        onGustoChange={(e) => actualizarGusto(emp, e.target.value)}
-                        onCantidadChange={(e) => actualizarCantidad(emp, e.target.value)}
-                    />
-                ))}
-
-                <div>
-                    <button onClick={agregarOtraEmpanada}> Otra Empanada </button>
                 </div>
 
-                <div>
-                    <button type="submit"> Enviar Pedido </button>
-                </div>
+                <button onClick={agregarOtraEmpanada}>Agregar otra empanada</button>
 
+                <button type="submit">Enviar pedido</button>
             </form>
         </>
     )

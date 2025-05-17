@@ -1,0 +1,21 @@
+
+label {
+  display: inline-block;
+  margin-right: 0.5rem;
+  font-weight: 600;
+  color: #444;
+}
+
+select,
+input[type="number"] {
+  margin-right: 1rem;
+  padding: 0.3rem 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  width: 160px;
+}
+
+input[type="number"] {
+  width: 80px;
+}

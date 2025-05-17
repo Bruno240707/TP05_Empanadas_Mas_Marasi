@@ -1,21 +1,17 @@
 import { useState } from 'react'
-import Formulario from './Componentes/Formulario/Index.jsx'
-import Listado from './Componentes/Listado/Index.jsx'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
 import './App.css'
+import Formulario from './Componentes/Formulario/Index'
+import Lista from './Componentes/Lista/Index'
 
 function App() {
   const [pedidos, setPedidos] = useState([])
-  const [pedidosPorEmpanada, setPedidosPorEmpanada] = useState([{
-    nombre: 'Carne Suave',
+  const [pedidosPorGusto, setPedidosPorGusto] = useState([{
+    gusto: "Jamon y Queso",
     cantidad: 0
   },{
-    nombre: 'Carne Picante',
-    cantidad: 0
-  },{
-    nombre: 'Pollo',
-    cantidad: 0
-  }, {
-    nombre: 'Jamon y Queso',
+    gusto: "Carne Picante",
     cantidad: 0
   }
   ])
@@ -23,11 +19,10 @@ function App() {
   return (
     <>
       <div>
-
-        <Formulario setPedidos={setPedidos} setPedidosPorEmpanada={setPedidosPorEmpanada} pedidos={pedidos} pedidosPorEmpanada={pedidosPorEmpanada}/>
-
-        <Listado pedidos={pedidos} pedidosPorEmpanada={pedidosPorEmpanada}/>
-
+        <Formulario pedidosPorGusto={pedidosPorGusto} setPedidos={setPedidos} setPedidosPorGusto={setPedidosPorGusto} pedidos={pedidos}/>
+      </div>
+      <div>
+        <Lista pedidos={pedidos} pedidosPorGusto={pedidosPorGusto}/>
       </div>
     </>
   )
